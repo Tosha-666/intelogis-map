@@ -1,11 +1,18 @@
-import { FC } from 'react';
+import { FC, useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, Popup, Marker } from 'react-leaflet';
 import styles from './Map.module.scss';
-import Leaflet, { LatLngExpression } from 'leaflet';
+import Leaflet, { LatLngExpression, Map as LeafletMap } from 'leaflet';
 import { createControlComponent } from '@react-leaflet/core';
 import 'leaflet-routing-machine';
 
 const Map: FC = () => {
+ const mapRef = useRef<LeafletMap>(null);
+
+ useEffect(() => {
+  mapRef.current?.invalidateSize();
+  console.log(mapRef);
+ }, []);
+
  const CreateRouterMachineLayer = () =>
   Leaflet.Routing.control({
    waypoints: [
@@ -27,10 +34,11 @@ const Map: FC = () => {
 
  return (
   <MapContainer
+   ref={mapRef}
    className={styles.mapContainer}
    center={[51.505, -0.09]}
    zoom={13}
-   scrollWheelZoom={false}
+   scrollWheelZoom={true}
   >
    <TileLayer
     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
